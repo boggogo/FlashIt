@@ -3,4 +3,5 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="designed_by">Designed by Georgi Koemdzhiev \n Email: koemdjiev@gmail.com</string>
 </resources>
