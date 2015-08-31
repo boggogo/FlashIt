@@ -51,14 +51,14 @@ public class MainActivity extends Activity {
         @Override
         public void onClick(View v) {
             if (isFlashLightOn) {
-                flashLightButton.setImageResource(R.mipmap.button_up);
+                flashLightButton.setImageResource(R.mipmap.off);
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                 camera.setParameters(parameters);
                 camera.stopPreview();
                 isFlashLightOn = false;
                 playSound();
             } else {
-                flashLightButton.setImageResource(R.mipmap.button_down);
+                flashLightButton.setImageResource(R.mipmap.on);
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 camera.setParameters(parameters);
                 camera.startPreview();

@@ -3,31 +3,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".MainActivity"
-    android:background="@drawable/bg_cool5">
+    android:background="@drawable/bg_cool6">
 
     <ImageView
-        android:layout_width="170dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:id="@+id/torchBtn"
-        android:src="@mipmap/button_up"
+        android:src="@mipmap/off"
         android:scaleType="fitXY"
         android:soundEffectsEnabled="false"
         android:adjustViewBounds="true"
+        android:layout_marginBottom="106dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp"/>
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="44dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/designed_by"
         android:id="@+id/textView"
         android:textSize="13sp"
+        android:textColor="#3AFFFFFF"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="#3AFFFFFF"/>
+        android:layout_centerHorizontal="true"/>
 
 
 </RelativeLayout>
