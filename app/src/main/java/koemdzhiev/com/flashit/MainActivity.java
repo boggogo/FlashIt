@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
     private MediaPlayer mp;
@@ -21,13 +22,15 @@ public class MainActivity extends Activity {
     private ImageView flashLightButton;
     boolean isFlashLightOn = false;
     private ImageView mLightening;
+    private TextView mVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mLightening = (ImageView)findViewById(R.id.lightening);
-
+        mVersion = (TextView)findViewById(R.id.versionTV);
+        mVersion.setText("app version: " + BuildConfig.VERSION_NAME);
         AlphaAnimation animation1 = new AlphaAnimation(0.2f, 0.5f);
         animation1.setDuration(700);
         //animation1.setStartOffset(5000);
@@ -50,7 +53,15 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onResume() {
+        isFlashLightOn = false;
+        flashLightButton.setImageResource(R.mipmap.off);
+        mLightening.setImageResource(R.mipmap.layer_1);
+
         super.onResume();
+        if(camera == null){
+            camera = Camera.open();
+            parameters = camera.getParameters();
+        }
 
     }
 
@@ -92,10 +103,6 @@ public class MainActivity extends Activity {
                 flashLightButton.setImageResource(R.mipmap.on);
                 mLightening.setImageResource(R.mipmap.layer_0);
                 mLightening.setAlpha(100);
-                if(camera == null){
-                    camera = Camera.open();
-                    parameters = camera.getParameters();
-                }
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 camera.setParameters(parameters);
                 camera.startPreview();
