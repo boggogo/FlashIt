@@ -2,11 +2,14 @@ package koemdzhiev.com.flashit;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
@@ -26,7 +29,7 @@ public class MainActivity extends Activity {
         mLightening = (ImageView)findViewById(R.id.lightening);
 
         AlphaAnimation animation1 = new AlphaAnimation(0.2f, 0.5f);
-        animation1.setDuration(1000);
+        animation1.setDuration(700);
         //animation1.setStartOffset(5000);
         animation1.setFillAfter(true);
         mLightening.startAnimation(animation1);
@@ -43,6 +46,22 @@ public class MainActivity extends Activity {
             showNoFlashAlert();
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (camera != null) {
+            camera.stopPreview();
+            camera.release();
+            camera = null;
+        }
     }
 
     @Override
@@ -73,6 +92,10 @@ public class MainActivity extends Activity {
                 flashLightButton.setImageResource(R.mipmap.on);
                 mLightening.setImageResource(R.mipmap.layer_0);
                 mLightening.setAlpha(100);
+                if(camera == null){
+                    camera = Camera.open();
+                    parameters = camera.getParameters();
+                }
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 camera.setParameters(parameters);
                 camera.startPreview();
@@ -88,20 +111,35 @@ public class MainActivity extends Activity {
     }
     //play sound
     private void playSound(){
-        if(isFlashLightOn){
-            mp = MediaPlayer.create(MainActivity.this, R.raw.switch_off);
-        }else{
-            mp = MediaPlayer.create(MainActivity.this, R.raw.switch_on);
-        }
-        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                // TODO Auto-generated method stub
-                mp.release();
-            }
-        });
-        mp.start();
+        switch (am.getRingerMode()) {
+            case AudioManager.RINGER_MODE_SILENT:
+                Log.i("MyApp","Silent mode");
+                break;
+            case AudioManager.RINGER_MODE_VIBRATE:
+                Log.i("MyApp","Vibrate mode");
+                break;
+            case AudioManager.RINGER_MODE_NORMAL:
+                Log.i("MyApp", "Normal mode");
+
+                if(isFlashLightOn){
+                    mp = MediaPlayer.create(MainActivity.this, R.raw.switch_off);
+                }else{
+                    mp = MediaPlayer.create(MainActivity.this, R.raw.switch_on);
+                }
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        // TODO Auto-generated method stub
+                        mp.release();
+                    }
+                });
+                mp.start();
+                break;
+        }
+
     }
     private void showNoFlashAlert() {
         new AlertDialog.Builder(MainActivity.this)
