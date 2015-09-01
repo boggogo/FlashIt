@@ -8,6 +8,7 @@ import android.hardware.Camera;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 
 public class MainActivity extends Activity {
@@ -16,11 +17,20 @@ public class MainActivity extends Activity {
     private Camera.Parameters parameters;
     private ImageView flashLightButton;
     boolean isFlashLightOn = false;
+    private ImageView mLightening;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mLightening = (ImageView)findViewById(R.id.lightening);
+
+        AlphaAnimation animation1 = new AlphaAnimation(0.2f, 0.5f);
+        animation1.setDuration(1000);
+        //animation1.setStartOffset(5000);
+        animation1.setFillAfter(true);
+        mLightening.startAnimation(animation1);
+       // mLightening.setAlpha(70);
 
         if (ifHasFlash()) {
             //turn on the flash
@@ -52,6 +62,8 @@ public class MainActivity extends Activity {
         public void onClick(View v) {
             if (isFlashLightOn) {
                 flashLightButton.setImageResource(R.mipmap.off);
+                mLightening.setImageResource(R.mipmap.layer_1);
+                mLightening.setAlpha(90);
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                 camera.setParameters(parameters);
                 camera.stopPreview();
@@ -59,6 +71,8 @@ public class MainActivity extends Activity {
                 playSound();
             } else {
                 flashLightButton.setImageResource(R.mipmap.on);
+                mLightening.setImageResource(R.mipmap.layer_0);
+                mLightening.setAlpha(100);
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 camera.setParameters(parameters);
                 camera.startPreview();
