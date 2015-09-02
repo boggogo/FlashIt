@@ -11,9 +11,11 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 
 public class MainActivity extends Activity {
     private MediaPlayer mp;
@@ -23,27 +25,31 @@ public class MainActivity extends Activity {
     boolean isFlashLightOn = false;
     private ImageView mLightening;
     private TextView mVersion;
+    private ImageView mOnButtonCover;
+    private ImageView mOffButtonCover;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mOnButtonCover = (ImageView)findViewById(R.id.onCoverView);
+        mOffButtonCover = (ImageView)findViewById(R.id.offCoverView);
+
         mLightening = (ImageView)findViewById(R.id.lightening);
         mVersion = (TextView)findViewById(R.id.versionTV);
         mVersion.setText("app version: " + BuildConfig.VERSION_NAME);
-        AlphaAnimation animation1 = new AlphaAnimation(0.2f, 0.5f);
-        animation1.setDuration(700);
-        //animation1.setStartOffset(5000);
-        animation1.setFillAfter(true);
-        mLightening.startAnimation(animation1);
-       // mLightening.setAlpha(70);
+
+        mLightening.setAlpha(70);
 
         if (ifHasFlash()) {
             //turn on the flash
             camera = Camera.open();
             parameters = camera.getParameters();
             flashLightButton = (ImageView)findViewById(R.id.torchBtn);
-            flashLightButton.setOnClickListener(new FlashOnOffListener());
+            //flashLightButton.setOnClickListener(new FlashOnOffListener());
+            mOffButtonCover.setOnClickListener(new FlashOnOffListener());
+            mOnButtonCover.setOnClickListener(new FlashOnOffListener());
         } else {
             //alert the user that the flash feature is not part of the camera
             showNoFlashAlert();
@@ -90,7 +96,7 @@ public class MainActivity extends Activity {
 
         @Override
         public void onClick(View v) {
-            if (isFlashLightOn) {
+            if (v.getId() == mOffButtonCover.getId()) {
                 flashLightButton.setImageResource(R.mipmap.off);
                 mLightening.setImageResource(R.mipmap.layer_1);
                 mLightening.setAlpha(90);
@@ -105,11 +111,15 @@ public class MainActivity extends Activity {
                 mLightening.setAlpha(100);
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 camera.setParameters(parameters);
+                if(!isFlashLightOn)
                 camera.startPreview();
                 isFlashLightOn = true;
                 playSound();
             }
 
+            YoYo.with(Techniques.Pulse)
+                    .duration(100)
+                    .playOn(mLightening);
         }
     }
 

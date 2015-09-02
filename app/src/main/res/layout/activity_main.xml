@@ -34,7 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true">
+        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/linearLayout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -54,6 +56,33 @@
             android:src="@mipmap/layer_1"
             android:adjustViewBounds="true"
 />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/torchBtn"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/offCoverView"
+            android:scaleType="fitXY"
+            android:visibility="visible"
+            android:soundEffectsEnabled="false"
+            android:background="@android:color/transparent"
+           />
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/onCoverView"
+            android:scaleType="fitXY"
+            android:visibility="visible"
+            android:soundEffectsEnabled="false"
+            android:background="@android:color/transparent"
+            />
     </LinearLayout>
 
 
