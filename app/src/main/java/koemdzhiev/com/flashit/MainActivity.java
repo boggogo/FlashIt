@@ -103,6 +103,7 @@ public class MainActivity extends Activity {
                 mLightening.setAlpha(90);
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                 camera.setParameters(parameters);
+                if(isFlashLightOn)
                 camera.stopPreview();
                 isFlashLightOn = false;
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
