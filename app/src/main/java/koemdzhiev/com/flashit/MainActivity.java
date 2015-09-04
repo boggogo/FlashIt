@@ -111,7 +111,7 @@ public class MainActivity extends Activity {
             } else {
                 flashLightButton.setImageResource(R.mipmap.on);
                 mLightening.setImageResource(R.mipmap.layer_0);
-                mLightening.setAlpha(100);
+                mLightening.setAlpha(150);
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 camera.setParameters(parameters);
                 if(!isFlashLightOn)

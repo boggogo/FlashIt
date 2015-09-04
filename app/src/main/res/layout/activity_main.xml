@@ -13,7 +13,7 @@
         android:scaleType="fitXY"
         android:soundEffectsEnabled="false"
         android:adjustViewBounds="true"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="60dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
 
@@ -33,37 +33,11 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:gravity="center_horizontal"
         android:layout_centerHorizontal="true"
-        android:id="@+id/linearLayout">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text=""
-            android:textColor="#3AFFFFFF"
-            android:id="@+id/versionTV"/>
-
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/lightening"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="30dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/layer_1"
-            android:adjustViewBounds="true"
-/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignTop="@+id/torchBtn"
-        android:layout_centerHorizontal="true">
+        android:layout_alignBottom="@+id/torchBtn"
+        android:layout_alignLeft="@+id/torchBtn"
+        android:layout_alignRight="@+id/torchBtn">
 
         <ImageView
             android:layout_width="80dp"
@@ -84,6 +58,27 @@
             android:background="@android:color/transparent"
             />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="app version: 0.0"
+        android:textColor="#3AFFFFFF"
+        android:id="@+id/versionTV"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"/>
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/lightening"
+        android:scaleType="fitXY"
+        android:src="@mipmap/layer_1"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/versionTV"
+        android:layout_centerHorizontal="true"/>
 
 
 </RelativeLayout>
