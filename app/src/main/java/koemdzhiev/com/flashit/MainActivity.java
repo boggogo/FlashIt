@@ -4,19 +4,28 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+
+import tourguide.tourguide.Overlay;
+import tourguide.tourguide.Pointer;
+import tourguide.tourguide.ToolTip;
+import tourguide.tourguide.TourGuide;
 
 public class MainActivity extends Activity {
     private MediaPlayer mp;
@@ -28,12 +37,20 @@ public class MainActivity extends Activity {
     private TextView mVersion;
     private ImageView mOnButtonCover;
     private ImageView mOffButtonCover;
+    public TourGuide mTutorialHandler;
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+    private boolean is_tour_guide_shown = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mSharedPreferences = getSharedPreferences(Constants.APP_NAME,MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
+        is_tour_guide_shown = mSharedPreferences.getBoolean(Constants.IF_TOUR_GUIDE_SHOWN, false);
+
         mOnButtonCover = (ImageView)findViewById(R.id.onCoverView);
         mOffButtonCover = (ImageView)findViewById(R.id.offCoverView);
 
@@ -56,6 +73,34 @@ public class MainActivity extends Activity {
             showNoFlashAlert();
         }
 
+        //set up tour guite
+        Animation enterAnimation = new AlphaAnimation(0f, 1f);
+        enterAnimation.setDuration(600);
+        enterAnimation.setFillAfter(true);
+
+
+        Animation exitAnimation = new AlphaAnimation(1f, 0f);
+        exitAnimation.setDuration(600);
+        exitAnimation.setFillAfter(true);
+
+        if(!is_tour_guide_shown) {
+        /* initialize TourGuide without playOn() */
+            mTutorialHandler = TourGuide.init(this).with(TourGuide.Technique.Click)
+                    .setPointer(new Pointer())
+                    .setToolTip(new ToolTip()
+                                    .setTitle("Tour Guide")
+                                    .setDescription("Click on this button to activate flashlight.")
+                                    .setGravity(Gravity.CENTER_HORIZONTAL)
+                    )
+                    .setOverlay(new Overlay()
+                                    .setEnterAnimation(enterAnimation)
+                                    .setExitAnimation(exitAnimation)
+                    );
+
+
+            mTutorialHandler.playOn(mOnButtonCover);
+        }
+
     }
 
     @Override
@@ -69,6 +114,9 @@ public class MainActivity extends Activity {
             camera = Camera.open();
             parameters = camera.getParameters();
         }
+        //clean up any tour guide cards left
+        if(is_tour_guide_shown && mTutorialHandler != null)
+        mTutorialHandler.cleanUp();
 
     }
 
@@ -108,6 +156,12 @@ public class MainActivity extends Activity {
                 isFlashLightOn = false;
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 playSound();
+
+                if(!is_tour_guide_shown)
+                mTutorialHandler.cleanUp();
+                mEditor.putBoolean(Constants.IF_TOUR_GUIDE_SHOWN,true);
+                is_tour_guide_shown = true;
+                mEditor.commit();
             } else {
                 flashLightButton.setImageResource(R.mipmap.on);
                 mLightening.setImageResource(R.mipmap.layer_0);
@@ -119,11 +173,18 @@ public class MainActivity extends Activity {
                 isFlashLightOn = true;
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 playSound();
+
+                if(!is_tour_guide_shown) {
+                    mTutorialHandler.cleanUp();
+                    mTutorialHandler.setToolTip(new ToolTip().setTitle("Tour Guide").setDescription("Click on this button to deactivate it.").setGravity(Gravity.TOP | Gravity.RIGHT)).playOn(mOffButtonCover);
+                }
+
             }
 
             YoYo.with(Techniques.Pulse)
                     .duration(100)
                     .playOn(mLightening);
+
         }
     }
 
